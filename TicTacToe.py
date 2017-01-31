@@ -1,27 +1,31 @@
+# Wait, left() exists? Oh...
+
+# Imports
 from turtle import *
 from time import *
 
-setup(400,400)
+setup(400,500) # Set window size # This comment is commenting about the comment about setting the window size in our code order to satisfy the requirment that requires comments on our code using comments.
 
-# Wait, left() exists? Oh...
+
+print("""
+1 | 2 | 3
+---------
+4 | 5 | 6
+---------
+7 | 8 | 9
+      """) # Inform user of instructions
 
 tracer(0,0) # Used to remove turtle animation, update() to refresh screen
 
-# Grid variables
-column1 = [0,0,0]
-column2 = [0,0,0]
-column3 = [0,0,0]
-
+# Variables
+grid = [0,0,0,0,0,0,0,0,0] # Set an array to store the grid inputs
 winnerExists = False
 playerUp = 1
 
 # Move start to the upper right
 penup()
-right(180)
-forward(150)
-right(90)
-forward(150)
-right(90)
+goto(-150,150)
+pendown()
 
 # Draw inital grid lines
 penup()
@@ -57,10 +61,26 @@ forward(300)
 right(180)
 update()
 
-# Get input and calculate CPU
+# Functions to draw text
+def playUpDraw():
+    right(270)
+    forward(50)
+    right(90)
+    write("Player up: " + str(playerUp), font=("Arial", 24, "bold"))
+    right(90)
+    forward(50)
+    right(270)
 
+def playerWins(winner):
+    right(270)
+    forward(50)
+    right(90)
+    write("Player " + str(winner) + " wins.", font=("Arial", 24, "bold"))
+    right(90)
+    forward(50)
+    right(270)
 
-# Functions to draw grids
+# Functions to draw grid spaces
 def drawNothing():
     penup()
     forward(100)
@@ -106,7 +126,7 @@ def drawO():
     pendown()
 
 
-
+# Moves down a row and to the start
 def nextRow():
     penup()
     right(90)
@@ -116,85 +136,78 @@ def nextRow():
     right(180)
     pendown()
 
+
+# Make sure that the space is not already ocupied
 def checkForError(num):
-    if 3 >= num >= 1:
-        if num == 1:
-            if column1[0] == 0:
-                return False
-        if num == 2:
-            if column1[1] == 0:
-                return False
-        if num == 3:
-            if column1[2] == 0:
-                return False
-    if 6 >= num >= 4:
-        if num == 4:
-            if column2[0] == 0:
-                return False
-        if num == 5:
-            if column2[1] == 0:
-                return False
-        if num == 6:
-            if column2[2] == 0:
-                return False
-    if 9 >= num >= 7:
-        if num == 7:
-            if column3[0] == 0:
-                return False
-        if num == 8:
-            if column3[1] == 0:
-                return False
-        if num == 9:
-            if column3[2] == 0:
-                return False
-    return True
+    try:
+        if grid[int(num)-1] == 0:
+            return False
+        return True
+    except ValueError: # Checks for if the user inputs a string
+        return False
  
     
-
+#Check for every possible win
 def detectWin():
-    if column1 == [1,1,1]:
+    if grid[0] == 1 and grid[1] == 1 and grid[2] == 1:
         win(1)
-    if column2 == [1,1,1]:
+        playerWins(1)
+    if grid[3] == 1 and grid[4] == 1 and grid[5] == 1:
         win(1)
-    if column3 == [1,1,1]:
+        playerWins(1)
+    if grid[6] == 1 and grid[7] == 1 and grid[8] == 1:
         win(1)
-    if column1[0] == 1 and column2[0] == 1 and column3[0] == 1:
+        playerWins(1)
+    if grid[0] == 1 and grid[3] == 1 and grid[6] == 1:
         win(1)
-    if column1[1] == 1 and column2[1] == 1 and column3[1] == 1:
+        playerWins(1)
+    if grid[1] == 1 and grid[4] == 1 and grid[7] == 1:
         win(1)
-    if column1[2] == 1 and column2[2] == 1 and column3[2] == 1:
+        playerWins(1)
+    if grid[2] == 1 and grid[5] == 1 and grid[8] == 1:
         win(1)
-    if column1[0] == 1 and column2[1] == 1 and column3[2] == 1:
+        playerWins(1)
+    if grid[0] == 1 and grid[4] == 1 and grid[8] == 1:
         win(1)
-    if column1[2] == 1 and column2[1] == 1 and column3[0] == 1:
+        playerWins(1)
+    if grid[2] == 1 and grid[4] == 1 and grid[6] == 1:
         win(1)
+        playerWins(1)
+        
 
-    if column1 == [2,2,2]:
+    if grid[0] == 2 and grid[1] == 2 and grid[2] == 2:
         win(2)
-    if column2 == [2,2,2]:
+        playerWins(2)
+    if grid[3] == 2 and grid[4] == 2 and grid[5] == 2:
         win(2)
-    if column3 == [2,2,2]:
+        playerWins(2)
+    if grid[6] == 2 and grid[7] == 2 and grid[8] == 2:
         win(2)
-    if column1[0] == 2 and column2[0] == 2 and column3[0] == 2:
+        playerWins(2)
+    if grid[0] == 2 and grid[3] == 2 and grid[6] == 2:
         win(2)
-    if column1[1] == 2 and column2[1] == 2 and column3[1] == 2:
+        playerWins(2)
+    if grid[1] == 2 and grid[4] == 2 and grid[7] == 2:
         win(2)
-    if column1[2] == 2 and column2[2] == 2 and column3[2] == 2:
+        playerWins(2)
+    if grid[2] == 2 and grid[5] == 2 and grid[8] == 2:
         win(2)
-    if column1[0] == 2 and column2[1] == 2 and column3[2] == 2:
+        playerWins(2)
+    if grid[0] == 2 and grid[4] == 2 and grid[8] == 2:
         win(2)
-    if column1[2] == 2 and column2[1] == 2 and column3[0] == 2:
+        playerWins(2)
+    if grid[2] == 2 and grid[4] == 2 and grid[6] == 2:
         win(2)
+        playerWins(2)
 
+
+#Fluff
 def win(winner):
     global winnerExists
-    if winner == 1:
-        print("Player 1 wins!!!!!!")
-    elif winner == 2:
-        print("Player 2 wins!!!!!!")
     winnerExists = True
+    grid = ['']
     
-
+# This is the master function to update the screen, called at the end of each turn
 def screenUpdate():
     clear()
     penup()
@@ -230,7 +243,7 @@ def screenUpdate():
     right(180)
 
     pendown()
-    for i in column1:
+    for i in grid[0:3]:
         if i == 0:
             drawNothing()
         if i == 1:
@@ -238,7 +251,7 @@ def screenUpdate():
         if i == 2:
             drawO()
     nextRow()
-    for i in column2:
+    for i in grid[3:6]:
         if i == 0:
             drawNothing()
         if i == 1:
@@ -246,7 +259,7 @@ def screenUpdate():
         if i == 2:
             drawO()
     nextRow()
-    for i in column3:
+    for i in grid[6:9]:
         if i == 0:
             drawNothing()
         if i == 1:
@@ -262,10 +275,10 @@ def screenUpdate():
     pendown()
     update()
 
+
 def askInput():
-    global column1
-    global column2
-    global column3
+    global playerUp
+    playUpDraw()
     if playerUp == 1:
         print("Player 1 Up. Choose number between 1 and 9")
     else:
@@ -277,67 +290,17 @@ def askInput():
             integer = True
         except ValueError:
             print("Enter a number please.")
+            gridInput = None
     while not 9 >= int(gridInput) >= 1:
-        gridInput = input("Not a valid input, try another.")
-    while checkForError(int(gridInput)):
+        try:
+            gridInput = input("Not a valid input, try another.")
+        except ValueError:
+            print("Enter a number please")
+            gridInput = None
+    while checkForError(gridInput):
         gridInput = input("Already filled, try another.")
-    if 3 >= int(gridInput) >= 1:
-        if int(gridInput) == 1:
-            if column1[0] == 0:
-                if playerUp == 1:
-                    column1[0] = 1
-                else:
-                    column1[0] = 2
-        if int(gridInput) == 2:
-            if column1[1] == 0:
-                if playerUp == 1:
-                    column1[1] = 1
-                else:
-                    column1[1] = 2
-        if int(gridInput) == 3:
-            if column1[2] == 0:
-                if playerUp == 1:
-                    column1[2] = 1
-                else:
-                    column1[2] = 2
-    if 6 >= int(gridInput) >= 4:
-        if int(gridInput) == 4:
-            if column2[0] == 0:
-                if playerUp == 1:
-                    column2[0] = 1
-                else:
-                    column2[0] = 2
-        if int(gridInput) == 5:
-            if column2[1] == 0:
-                if playerUp == 1:
-                    column2[1] = 1
-                else:
-                    column2[1] = 2
-        if int(gridInput) == 6:
-            if column2[2] == 0:
-                if playerUp == 1:
-                    column2[2] = 1
-                else:
-                    column2[2] = 2
-    if 9 >= int(gridInput) >= 7:
-        if int(gridInput) == 7:
-            if column3[0] == 0:
-                if playerUp == 1:
-                    column3[0] = 1
-                else:
-                    column3[0] = 2
-        if int(gridInput) == 8:
-            if column3[1] == 0:
-                if playerUp == 1:
-                    column3[1] = 1
-                else:
-                    column3[1] = 2
-        if int(gridInput) == 9:
-            if column3[2] == 0:
-                if playerUp == 1:
-                    column3[2] = 1
-                else:
-                    column3[2] = 2
+
+    grid[gridInput-1] = playerUp
     
 
 def turn():
@@ -349,8 +312,8 @@ def turn():
     else:
         playerUp = 1
     detectWin()
-    screenUpdate()
     if winnerExists == False:
+        screenUpdate()
         turn()
 
 turn()
