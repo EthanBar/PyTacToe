@@ -71,6 +71,7 @@ while startInput.lower() != "no" and startInput.lower() != "n":
 
     # Functions to draw text
     def playUpDraw():
+        penup()
         right(270)
         forward(50)
         right(90)
@@ -80,10 +81,18 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         right(270)
 
     def drawCat():
+<<<<<<< Updated upstream
         right(270)
         forward(50)
         right(90)
         write("It's a tie. You both feel depressed and reconsider your life.", font=("Arial", 24, "bold"))
+=======
+        penup()
+        right(270)
+        forward(50)
+        right(90)
+        write("Cat's Game", font=("Arial", 24, "bold"))
+>>>>>>> Stashed changes
         right(90)
         forward(50)
         right(270)
@@ -336,10 +345,21 @@ while startInput.lower() != "no" and startInput.lower() != "n":
 
 
     def cat():
+<<<<<<< Updated upstream
+=======
+        global winnerExists
+        global grid
+>>>>>>> Stashed changes
         if 0 not in grid and winnerExists == False:
             print("Cat's game!")
             winnerExists == True
             drawCat()
+<<<<<<< Updated upstream
+=======
+            grid = ['']
+            return True
+        return False
+>>>>>>> Stashed changes
 
 
 
@@ -361,7 +381,7 @@ while startInput.lower() != "no" and startInput.lower() != "n":
                     gridInput = None
             while not 9 >= int(gridInput) >= 1: # Tests to see if input is in range
                 try:
-                    gridInput = input("Enter a number between 1 and 9, try another.")
+                    gridInput = int(input("Enter a number between 1 and 9, try another."))
                 except ValueError:
                     print("Enter a number please")
                     gridInput = None
@@ -376,7 +396,7 @@ while startInput.lower() != "no" and startInput.lower() != "n":
                         print("Enter a number please.")
                         gridInput = None
 
-            grid[gridInput-1] = playerUp # This should be an int that is in range and not already filled, so it is safe to write
+            grid[int(gridInput)-1] = playerUp # This should be an int that is in range and not already filled, so it is safe to write
         else:
             CPU()
             print("cpu is playing you boi")
@@ -384,6 +404,11 @@ while startInput.lower() != "no" and startInput.lower() != "n":
     def turn():
         global winnerExists
         global playerUp
+<<<<<<< Updated upstream
+=======
+        if cat():
+            return
+>>>>>>> Stashed changes
         askInput()
         if playerUp == 1:
             playerUp = 2
