@@ -1,20 +1,16 @@
 #!/usr/bin/python
-# Wait, left() exists? Oh...
-
 # Imports
 from turtle import *
 from time import *
 from random import randint
-hideturtle()
+# Wait, left() exists? Oh...
+
+hideturtle() # Hide turtle, cuz it's ugly
+tracer(0,0) # Used to remove turtle animation, update() to refresh screen
 setup(400,500) # Set window size # This comment is commenting about the comment about setting the window size in our code order to satisfy the requirment that requires comments on our code using comments.
-startInput = ''
-cpuPlaying = input("1 or 2 players?")
-if cpuPlaying.lower() == "1":
-    cpuPlaying = True
-else:
-    cpuPlaying = False
-print(cpuPlaying)
-while startInput.lower() != "no" and startInput.lower() != "n":
+startInput = '' # Assume that the player wants to play if they launch the program
+cpuPlaying = False
+while startInput.lower() != "no" and startInput.lower() != "n": # Game loop
     print("""
     1 | 2 | 3
     ---------
@@ -23,51 +19,10 @@ while startInput.lower() != "no" and startInput.lower() != "n":
     7 | 8 | 9
     """) # Inform user of instructions
 
-    tracer(0,0) # Used to remove turtle animation, update() to refresh screen
-
     # Variables
     grid = [0,0,0,0,0,0,0,0,0] # Set an array to store the grid inputs
     winnerExists = False
     playerUp = 1
-
-    # Move start to the upper right
-    penup()
-    goto(-150,150)
-    pendown()
-
-    # Draw inital grid lines
-    penup()
-    forward(100)
-    right(90)
-    pendown()
-    forward(300)
-    penup()
-    right(270)
-    forward(100)
-    right(270)
-    pendown()
-    forward(300)
-    penup()
-    right(90)
-    forward(100)
-    right(90)
-    forward(100)
-    right(90)
-    pendown()
-    forward(300)
-    penup()
-    right(270)
-    forward(100)
-    right(270)
-    pendown()
-    forward(300)
-    penup()
-    right(270)
-    forward(200)
-    right(270)
-    forward(300)
-    right(180)
-    update()
 
     # Functions to draw text
     def playUpDraw():
@@ -81,22 +36,21 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         right(270)
 
     def drawCat():
-        right(270)
-        forward(50)
-        right(90)
-        write("It's a tie. You both feel depressed and reconsider your life.", font=("Arial", 24, "bold"))
         penup()
         right(270)
         forward(50)
         right(90)
         write("Cat's Game", font=("Arial", 24, "bold"))
-        right(90)
-        forward(50)
         right(270)
+        forward(50)
+        right(90)
         update()
 
     def playerWins(winner):
-        if winnerExists == True:
+        global winnerExists
+        if winner != 0:
+            winnerExists = True
+            grid = ['']
             screenUpdate()
             penup()
             right(270)
@@ -154,6 +108,39 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         right(90)
         pendown()
 
+    # Draw grid
+    def drawGrid():
+        penup()
+        forward(100)
+        right(90)
+        pendown()
+        forward(300)
+        penup()
+        right(270)
+        forward(100)
+        right(270)
+        pendown()
+        forward(300)
+        penup()
+        right(90)
+        forward(100)
+        right(90)
+        forward(100)
+        right(90)
+        pendown()
+        forward(300)
+        penup()
+        right(270)
+        forward(100)
+        right(270)
+        pendown()
+        forward(300)
+        penup()
+        right(270)
+        forward(200)
+        right(270)
+        forward(300)
+        right(180)
 
     # Moves down a row and to the start
     def nextRow():
@@ -165,21 +152,29 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         right(180)
         pendown()
 
-
-    # Make sure that the space is not already ocupied
-    def checkForError(num):
+    # Make sure that input is an int
+    def checkForInt(num):
         try:
-            if grid[int(num)-1] == 0:
-                return False
+            int(num)
             return True
-        except ValueError: # Checks for if the user inputs a string
-            return False
-        except TypeError:
+        except ValueError:
             return False
 
+    # Make sure that input is in range
+    def checkForRange(num):
+        if 9 >= num >= 1:
+            return True
+        return False
 
-    #Check for every possible win
+    # Make sure that input is empty
+    def checkForError(num):
+        if grid[num-1] == 0:
+            return True
+        return False
+
+    # Check for every possible win, also used for CPU
     def detectWin(tempGrid):
+        # Note that all array values are one less than expected
         if tempGrid[0] == 1 and tempGrid[1] == 1 and tempGrid[2] == 1:
             return 1
         if tempGrid[3] == 1 and tempGrid[4] == 1 and tempGrid[5] == 1:
@@ -197,7 +192,7 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         if tempGrid[2] == 1 and tempGrid[4] == 1 and tempGrid[6] == 1:
             return 1
 
-        # Player 2 or CPU
+        # Player 2
         if tempGrid[0] == 2 and tempGrid[1] == 2 and tempGrid[2] == 2:
             return 2
         if tempGrid[3] == 2 and tempGrid[4] == 2 and tempGrid[5] == 2:
@@ -214,8 +209,59 @@ while startInput.lower() != "no" and startInput.lower() != "n":
             return 2
         if tempGrid[2] == 2 and tempGrid[4] == 2 and tempGrid[6] == 2:
             return 2
+        return 0 # If no winner is found, return 0 AKA no player
 
-        return 0
+    # This is the master function to update the screen, called at the end of each turn
+    def screenUpdate():
+        clear()
+        drawGrid()
+        # Take a set of 3 grid numbers, draw them, then move down to the next row
+        for i in grid[0:3]:
+            if i == 0:
+                drawNothing()
+            if i == 1:
+                drawX()
+            if i == 2:
+                drawO()
+        nextRow()
+        for i in grid[3:6]:
+            if i == 0:
+                drawNothing()
+            if i == 1:
+                drawX()
+            if i == 2:
+                drawO()
+        nextRow()
+        for i in grid[6:9]:
+            if i == 0:
+                drawNothing()
+            if i == 1:
+                drawX()
+            if i == 2:
+                drawO()
+        penup() # Move back to top
+        right(270)
+        forward(200)
+        right(270)
+        forward(300)
+        right(180)
+        pendown()
+        update() # Refresh Screen
+
+    def CPU():
+        canWin = cpuWinCheck()
+        if canWin != False:
+            grid[canWin] = 1
+        else:
+            canBlock = playerWinCheck()
+            if canBlock != False:
+                grid[canBlock] = 1
+            else:
+                while True:
+                    randomNum = randint(1,9)
+                    if checkForError(randomNum):
+                        grid[randomNum-1] = 1
+                        break
 
     def gridCopy(gridToCopy):
         copyGrid = []
@@ -243,116 +289,16 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         return False
 
 
-
-
-    # TODO - Combine with playerWins()
-    def win(winner):
-        global winnerExists
-        if winner != 0:
-            winnerExists = True
-            grid = ['']
-
-    # This is the master function to update the screen, called at the end of each turn
-    def screenUpdate():
-        clear()
-        penup()
-        forward(100)
-        right(90)
-        pendown()
-        forward(300)
-        penup()
-        right(270)
-        forward(100)
-        right(270)
-        pendown()
-        forward(300)
-        penup()
-        right(90)
-        forward(100)
-        right(90)
-        forward(100)
-        right(90)
-        pendown()
-        forward(300)
-        penup()
-        right(270)
-        forward(100)
-        right(270)
-        pendown()
-        forward(300)
-        penup()
-        right(270)
-        forward(200)
-        right(270)
-        forward(300)
-        right(180)
-
-        pendown()
-        for i in grid[0:3]:
-            if i == 0:
-                drawNothing()
-            if i == 1:
-                drawX()
-            if i == 2:
-                drawO()
-        nextRow()
-        for i in grid[3:6]:
-            if i == 0:
-                drawNothing()
-            if i == 1:
-                drawX()
-            if i == 2:
-                drawO()
-        nextRow()
-        for i in grid[6:9]:
-            if i == 0:
-                drawNothing()
-            if i == 1:
-                drawX()
-            if i == 2:
-                drawO()
-        penup()
-        right(270)
-        forward(200)
-        right(270)
-        forward(300)
-        right(180)
-        pendown()
-        update()
-
-    def CPU():
-        print("cpu up")
-        canWin = cpuWinCheck()
-        if canWin != False:
-            grid[canWin] = 1
-            print("can win")
-        else:
-            canBlock = playerWinCheck()
-            if canBlock != False:
-                grid[canBlock] = 1
-                print("can block")
-            else:
-                while True:
-                    randomNum = randint(1,9)
-                    if not checkForError(randomNum):
-                        grid[randomNum-1] = 1
-                        print("randoming and got: " + str(randomNum))
-                        break
-        print("cpu end")
-
-
     def cat():
         global winnerExists
         global grid
         if 0 not in grid and winnerExists == False:
-            print("Cat's game!")
+            print("Cat's game")
             winnerExists == True
             drawCat()
             grid = ['']
             return True
         return False
-
-
 
     def askInput():
         global playerUp # Make this variable global to apply across all functions
@@ -362,35 +308,24 @@ while startInput.lower() != "no" and startInput.lower() != "n":
                 print("Player 1 Up. Choose number between 1 and 9")
             else:
                 print("Player 2 Up. Choose number between 1 and 9")
-            integer = False
-            while not integer: # Tests to see if input is a number
-                try:
-                    gridInput = int(input())
-                    integer = True
-                except ValueError: # Except stops the program from crashing when enocuntering an error
-                    print("Enter a number please.")
-                    gridInput = None
-            while not 9 >= int(gridInput) >= 1: # Tests to see if input is in range
-                try:
-                    gridInput = int(input("Enter a number between 1 and 9, try another."))
-                except ValueError:
-                    print("Enter a number please")
-                    gridInput = None
-            while checkForError(gridInput): # Tests to see if input is already filled
-                gridInput = input("Already filled, try another.")
-                integer = False
-                while not integer:
-                    try:
-                        gridInput = int(gridInput)
-                        integer = True
-                    except ValueError:
-                        print("Enter a number please.")
-                        gridInput = None
+            checkError = True
+            while checkError:
+                gridInput = input()
+                if checkForInt(gridInput):
+                    gridInput = int(gridInput)
+                    if checkForRange(gridInput):
+                        if checkForError(gridInput):
+                            checkError = False
+                        else:
+                            print("Space already filled")
+                    else:
+                        print("Please enter a number between 1 and 9")
+                else:
+                    print("Please enter a number")
 
             grid[int(gridInput)-1] = playerUp # This should be an int that is in range and not already filled, so it is safe to write
         else:
             CPU()
-            print("cpu is playing you boi")
 
     def turn():
         global winnerExists
@@ -403,16 +338,27 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         else:
             playerUp = 1
         winner = detectWin(grid)
-        win(winner)
         playerWins(winner)
-        cat()
         if winnerExists == False:
             screenUpdate()
             turn()
         else:
             return
 
-    turn()
+    # Start of Game
+    penup()
+    goto(-150,150) # Move start to the upper right
+    pendown()
+    drawGrid()
+    update()
+    cpuPlaying = input("1 or 2 players?")
+    if cpuPlaying.lower() == "1":
+        cpuPlaying = True
+    else:
+        cpuPlaying = False
+
+    turn() # Main Game
+    # End of Game
     update()
     restartInput=input ("Do you want to play again?") #This restarts the program.
     clear()
