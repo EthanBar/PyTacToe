@@ -81,18 +81,15 @@ while startInput.lower() != "no" and startInput.lower() != "n":
         right(270)
 
     def drawCat():
-<<<<<<< Updated upstream
         right(270)
         forward(50)
         right(90)
         write("It's a tie. You both feel depressed and reconsider your life.", font=("Arial", 24, "bold"))
-=======
         penup()
         right(270)
         forward(50)
         right(90)
         write("Cat's Game", font=("Arial", 24, "bold"))
->>>>>>> Stashed changes
         right(90)
         forward(50)
         right(270)
@@ -345,21 +342,15 @@ while startInput.lower() != "no" and startInput.lower() != "n":
 
 
     def cat():
-<<<<<<< Updated upstream
-=======
         global winnerExists
         global grid
->>>>>>> Stashed changes
         if 0 not in grid and winnerExists == False:
             print("Cat's game!")
             winnerExists == True
             drawCat()
-<<<<<<< Updated upstream
-=======
             grid = ['']
             return True
         return False
->>>>>>> Stashed changes
 
 
 
@@ -404,11 +395,8 @@ while startInput.lower() != "no" and startInput.lower() != "n":
     def turn():
         global winnerExists
         global playerUp
-<<<<<<< Updated upstream
-=======
         if cat():
             return
->>>>>>> Stashed changes
         askInput()
         if playerUp == 1:
             playerUp = 2
